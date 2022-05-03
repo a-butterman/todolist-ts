@@ -1,23 +1,45 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import {Todolist} from "./Todolist";
+import {Todolist} from './Todolist';
 
 function App() {
-    const tasks1 = [
+
+    let [tasks, setTasks] = useState([
         { id: 1, title: "HTML&CSS", isDone: true },
         { id: 2, title: "JS", isDone: true },
         { id: 3, title: "ReactJS", isDone: false }
-    ]
-    const tasks2 = [
-        { id: 1, title: "Hello world", isDone: true },
-        { id: 2, title: "I am Happy", isDone: false },
-        { id: 3, title: "Yo", isDone: false }
-    ]
+    ]);
+
+    const removeTasks = (id: number) => {
+        setTasks(tasks.filter((el) => el.id !== id))
+    }
+
+
+
+// id    const [filterForColander, setFilterForColander] = useState('all');
+//
+//
+//     const clickFilter = (name: string) => {
+//         setFilterForColander(name)
+//         console.log(name)
+//     }
+//
+//
+//     let colander = tasks
+//     if (filterForColander === 'active') {
+//         colander = tasks.filter((checkboxFilter) => checkboxFilter.isDone === false)
+//     }
+//     if (filterForColander === 'completed') {
+//         colander = tasks.filter((checkboxFilter) => checkboxFilter.isDone === true)
+//     }
 
     return (
         <div className="App">
-            <Todolist title={"Header 1"} name={1} tasks={tasks1}/>
-            <Todolist title={'Header 2'} tasks={tasks2}/>
+            <Todolist title="What to learn"
+                      tasks = {tasks}
+                      removeTasks = {removeTasks}
+//                      clickFilter = {clickFilter}
+            />
         </div>
     );
 }
