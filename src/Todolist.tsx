@@ -1,68 +1,71 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {FilterValuesType} from './App';
 
 
 
 type PropsType = {
     title: string
-    tasks: Array<TaskType>
-    removeTasks: (id: number) => void
-//    clickFilter: (name: string) => void
+    tasks: TaskType []
+    removeTask: (taskId: string) => void
+    changeFilter: (value: FilterValuesType) => void
+    addTasks: (title: string) => void
 }
 
 type TaskType = {
-    id: number
+    id: string
     title: string
     isDone: boolean
 }
 
-
-
-
-
-
-
 export function Todolist(props: PropsType) {
 
+    let [title, setTitle] = useState('')
 
-    const [filterForColander, setFilterForColander] = useState('all');
-
-
-    const clickFilter = (name: string) => {
-        setFilterForColander(name)
-        console.log(name)
+    const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        setTitle(event.currentTarget.value)
     }
 
-
-    let colander = props.tasks
-    if (filterForColander === 'active') {
-        colander = props.tasks.filter((checkboxFilter) => checkboxFilter.isDone === false)
-    }
-    if (filterForColander === 'completed') {
-        colander = props.tasks.filter((checkboxFilter) => checkboxFilter.isDone === true)
+    const onKeyPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            onClickNewTaskHandler()
+        }
     }
 
+    const onClickNewTaskHandler = () => {
+        props.addTasks(title)
+        setTitle('')
+    }
+
+    const removeTaskHandler = (TaskId: string) => {
+        props.removeTask(TaskId)
+    }
+
+    const changeFilterHandler = (filterValue: FilterValuesType) => {
+        props.changeFilter(filterValue)
+    }
 
     return <div>
         <h3>{props.title}</h3>
         <div>
-            <input/>
-            <button>+</button>
+            <input onKeyDown={onKeyPressHandler} onChange={onChangeInputHandler} value={title}/>
+            <button onClick={onClickNewTaskHandler}>+</button>
         </div>
+
         <ul>
-            {colander.map((el, index) => {
-                return (
-                    <li key={el.id}>
-                        <button onClick={() => props.removeTasks(el.id)}>x</button>
-                        <input type="checkbox" checked={el.isDone}/>
-                        <span>{el.title}</span>
+            {
+                props.tasks.map(t => (
+                    <li key={t.id}>
+                        <input type="checkbox" checked={t.isDone}/>
+                        <span>{t.title}</span>
+                        <button onClick={ () => { removeTaskHandler(t.id)
+                            console.log(`deleted task = ${t.title}`)} }>x</button>
                     </li>
-                )
-            })}
+                ))}
         </ul>
         <div>
-            <button onClick={() => clickFilter('all')}>All</button>
-            <button onClick={() => clickFilter('active')}>Active</button>
-            <button onClick={() => clickFilter('completed')}>Completed</button>
+            <button onClick={ () => { changeFilterHandler("all") } }>All</button>
+            <button onClick={ () => { changeFilterHandler("active") } }>Active</button>
+            <button onClick={ () => { changeFilterHandler("completed") } }>Completed</button>
         </div>
     </div>
 }
