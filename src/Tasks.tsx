@@ -1,6 +1,5 @@
 import React, {ChangeEvent} from 'react';
 import {TaskType} from "./Todolist";
-import {Zalupa} from "./ZALUPA";
 
 type TasksPropsType = {
     tasksForTodolist: TaskType[]
@@ -24,7 +23,6 @@ export const Tasks = (props: TasksPropsType) => {
 
     return (
         <div>
-            <Zalupa title={'asd'} isDone={false} asd={[]}/>
             {
                 props.tasksForTodolist.map(t => {
                     // const onClickHandler = () => props.removeTask(props.todolistID, t.id)
